@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>تفاصيل المنتج - مكيلة</title>
+    <link rel="stylesheet" href="store-style.css">
+    <style>
+        .product-gallery-main {
+            width: 100%;
+            max-width: 340px;
+            margin: 0 auto 18px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .product-gallery-main img {
+            width: 100%;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px #1976d244;
+            margin-bottom: 10px;
+            transition: box-shadow 0.2s;
+        }
+        .product-gallery-thumbs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .product-gallery-thumbs img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #eee;
+            cursor: pointer;
+            transition: border 0.2s;
+        }
+        .product-gallery-thumbs img.active {
+            border: 2px solid #1976d2;
+        }
+        body {
+            min-height: 100vh;
+            background: #f7fafc;
+        }
+    </style>
+</head>
+<body>
+    <nav class="main-nav gradient-header">
+        <div class="nav-logo">مكيلة</div>
+        <ul class="nav-links">
+            <li><a href="jsk.html#products">المنتجات</a></li>
+            <li><a href="cart.html" id="cart-link">سلة المشتريات <span id="cart-count" class="cart-count"></span></a></li>
+        </ul>
+    </nav>
+    <div class="container" id="product-details"></div>
+    <script>
+        // حماية من XSS: دالة بسيطة لتعقيم النصوص
+        function escapeHTML(str) {
+            return String(str).replace(/[&<>"']/g, function(m) {
+                return ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                })[m];
+            });
+        }
+
+        // عرض تفاصيل المنتج المختار مع معرض صور
+        const product = JSON.parse(localStorage.getItem('selectedProduct') || 'null');
+        const container = document.getElementById('product-details');
+        // جميع صور تفاصيل المنتج نفس صورة الوسط
+        function getProductImages(prod) {
+            const mainImg = 'c:/Users/User/Music/makeyla-promo.jpg.jpeg';
+            return [mainImg, mainImg, mainImg, mainImg];
+        }
+
+        if (product && typeof product === 'object' && product.name && product.price && product.desc) {
+            const images = getProductImages(product);
+            container.innerHTML = `
+                <h1>${escapeHTML(product.name)}</h1>
+                <div class="product-gallery-main">
+                    <img id="mainProductImg" src="${escapeHTML(images[0])}" alt="${escapeHTML(product.name)}">
+                    <div class="product-gallery-thumbs">
+                        ${images.map((img, i) => `<img src="${escapeHTML(img)}" class="${i===0?'active':''}" onclick="changeMainImg('${escapeHTML(img)}', this)">`).join('')}
+                    </div>
+                </div>
+                <div style="font-size:1.2rem;color:#1976d2;font-weight:bold;margin:18px 0;">${escapeHTML(product.price)} ريال</div>
+                <div style="margin-bottom:18px;">${escapeHTML(product.desc)}</div>
+                <button onclick="addToCart()" class="card-btn" style="margin-bottom:12px;">إضافة للعربة</button>
+                <button onclick="window.location.href='jsk.html'" class="card-btn" style="background:#fff;color:#1976d2;border:1px solid #1976d2;">العودة للمتجر</button>
+            `;
+        } else {
+            container.innerHTML = '<p style="text-align:center;color:#d32f2f;font-size:1.1rem;">لم يتم اختيار منتج.</p>';
+        }
+        // دالة تغيير الصورة الرئيسية
+        window.changeMainImg = function(src, el) {
+            document.getElementById('mainProductImg').src = src;
+            document.querySelectorAll('.product-gallery-thumbs img').forEach(img => img.classList.remove('active'));
+            el.classList.add('active');
+        }
+        // دالة إضافة للعربة
+        function addToCart() {
+            // تحقق من الموافقة على الشروط في localStorage
+            if (!localStorage.getItem('acceptedTerms')) {
+                alert('يجب الموافقة على الشروط والأحكام في الصفحة الرئيسية قبل إتمام الشراء.');
+                window.location.href = 'jsk.html#accept-terms';
+                return;
+            }
+            let cart = [];
+            try {
+                cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                if (!Array.isArray(cart)) cart = [];
+            } catch { cart = []; }
+            if (product && typeof product === 'object') cart.push(product);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            window.location.href = 'cart.html';
+        }
+
+        // تعطيل السحب والإفلات للصور لمنع أي محاولة إدخال ملفات أو ثغرات
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('img').forEach(function(img) {
+                img.ondragstart = function() { return false; };
+            });
+        });
+
+        // تعطيل النقر بزر الفأرة الأيمن على الصور
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.tagName === 'IMG') e.preventDefault();
+        });
+    </script>
+</body>
+</html>
