@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مكيلة - متجر بن مطحون</title>
+    <link rel="stylesheet" href="store-style.css">
+</head>
+<body>
+    <nav class="main-nav gradient-header">
+        <div class="nav-logo">مكيلة</div>
+        <ul class="nav-links">
+            <li><a href="#products">المنتجات</a></li>
+            <li><a href="cart.html" id="cart-link">سلة المشتريات <span id="cart-count" class="cart-count"></span></a></li>
+            <li><a href="#support" class="support-link" id="support-link">الدعم الفني</a></li>
+            <li><a href="privacy.html" id="policy-link">سياسة الخصوصية</a></li>
+            <li><a href="terms.html" id="terms-link">الشروط والأحكام</a></li>
+        </ul>
+    </nav>
+    <button id="scrollTopBtn" title="أعلى" style="display:none;position:fixed;bottom:32px;left:32px;z-index:2000;background:#1976d2;color:#fff;border:none;border-radius:50%;width:48px;height:48px;font-size:28px;box-shadow:0 2px 12px #0003;cursor:pointer;transition:background 0.2s;">↑</button>
+    <div class="container">
+        <h1>مكيلة</h1>
+        <div style="position:relative;display:flex;justify-content:center;margin-bottom:24px;">
+            <div id="threeDContainer" style="width:320px;max-width:90vw;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;perspective:900px;">
+                <img id="threeDImage" src="c:\Users\User\Music\makeyla-promo.jpg.jpeg" alt="مكيلة - معنا يبدأ يومك"
+                    style="width:100%;height:auto;max-width:320px;border-radius:22px;box-shadow:0 12px 40px #0003,0 2px 12px #1976d244;transition:transform 0.2s,box-shadow 0.2s;">
+            </div>
+        </div>
+        <div id="products"></div>
+        <div class="support-box" id="support">
+            <h2>الدعم الفني</h2>
+            <p>لأي استفسار أو مساعدة، تواصل معنا عبر:</p>
+            <ul>
+                <li>واتساب: <a href="https://wa.me/966500000000" target="_blank">966500000000+</a></li>
+                <li>البريد الإلكتروني: <a href="mailto:support@bunnstore.com">support@bunnstore.com</a></li>
+                <li>سمسا: <a href="https://www.smsaexpress.com/ar/contact-us" target="_blank">موقع سمسا الرسمي</a> | تويتر: <a href="https://twitter.com/SMSAexpress" target="_blank">@SMSAexpress</a> | خدمة العملاء: 920009999</li>
+                <li>أرامكس: <a href="https://www.aramex.com/sa/ar/contact-us" target="_blank">موقع أرامكس الرسمي</a> | تويتر: <a href="https://twitter.com/Aramex" target="_blank">@Aramex</a> | خدمة العملاء: 920027447</li>
+            </ul>
+            <div class="shipping-info" style="margin-top:18px;background:#e3f2fd;padding:12px 16px;border-radius:8px;">
+                <b>طريقة الشحن:</b><br>
+                بعد إتمام الطلب والدفع، سيتم التواصل معك عبر واتساب أو البريد الإلكتروني لتأكيد عنوانك واختيار شركة الشحن (سمسا أو أرامكس) حسب رغبتك. يمكنك أيضاً ذكر شركة الشحن المفضلة في ملاحظات الطلب أو التواصل مع الدعم الفني مباشرة بعد الشراء.
+            </div>
+        </div>
+        <footer id="policy">
+            <div class="footer-content">
+                <span>جميع الحقوق محفوظة &copy; 2025 مكيلة</span>
+                <span class="policy-links">
+                    <a href="privacy.html" class="policy-link">سياسة الخصوصية</a> | 
+                    <a href="terms.html" class="terms-link">الشروط والأحكام</a> | 
+                    <a href="#support" class="support-link">الدعم الفني</a>
+                </span>
+            </div>
+        </footer>
+        <div id="terms" style="margin:40px 0 0 0;"></div>
+        <div style="margin:24px 0 0 0;display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" id="accept-terms">
+            <label for="accept-terms" style="font-size:1rem;cursor:pointer;">
+                أوافق على <a href="jsk.html#terms" style="color:#1976d2;text-decoration:underline;">الشروط والأحكام</a>
+            </label>
+        </div>
+        <style>
+            body {
+                background: url('c:/Users/User/Music/makeyla-promo.jpg.jpeg') center center/cover no-repeat fixed, linear-gradient(120deg,#e3f2fd 60%,#bbdefb 100%);
+                min-height: 100vh;
+            }
+            @keyframes spinBeans {0%{transform:rotate(-8deg);}100%{transform:rotate(8deg);}}
+            @keyframes fadeInLogo {from{opacity:0;transform:scale(0.7) translate(-50%,-50%);}to{opacity:1;transform:scale(1) translate(-50%,-50%);}}
+            .gradient-header {background: linear-gradient(90deg,#1976d2,#64b5f6,#1976d2);animation: gradmove 6s linear infinite;background-size:200% 100%;}
+            @keyframes gradmove {0%{background-position:0 0;}100%{background-position:100% 0;}}
+            .cart-count {background:#ff5252;color:#fff;border-radius:50%;padding:2px 8px;font-size:13px;margin-right:2px;vertical-align:middle;}
+            .product-card {
+                transition:transform 0.2s,box-shadow 0.2s;
+                box-shadow:0 2px 12px #0001;
+                perspective: 700px;
+            }
+            .product-card:hover {
+                transform:translateY(-8px) scale(1.03);
+                box-shadow:0 8px 32px #1976d233;
+                z-index:2;
+            }
+            .card-btn {background:linear-gradient(90deg,#1976d2,#64b5f6);color:#fff;transition:background 0.2s;}
+            .card-btn:hover {background:#1565c0;}
+            .cart-item {animation:fadein 0.7s;}
+            @keyframes fadein {from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
+            #scrollTopBtn:hover {background:#1565c0;}
+            .modal-bg {position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:1000;}
+            .modal-box {background:#fff;border-radius:12px;padding:32px 24px;box-shadow:0 4px 24px #0002;max-width:90vw;}
+            @media (max-width:600px){.modal-box{padding:16px 4px;}}
+            .nav-links .disabled-link {
+                pointer-events: none;
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            .product-3d-wrap {
+                transition: transform 0.3s cubic-bezier(.25,.8,.25,1);
+                will-change: transform;
+            }
+            /* تأثير دوران عند تحريك الماوس */
+            .product-card:hover .product-3d-wrap {
+                /* لا شيء هنا، التحكم بالجافاسكريبت */
+            }
+        </style>
+    </div>
+    <script>
+        // استخدم نفس صورة الوسط لجميع المنتجات
+        const mainImg = 'c:/Users/User/Music/makeyla-promo.jpg.jpeg';
+        const products = [
+            { name: 'قهوة عربية من صنع المنزل', price: 35, icon: '', img: mainImg, desc: 'قهوة عربية أصلية محضرة منزلياً بنكهات الهيل والزعفران.' },
+            { name: 'بن يمني فاخر', price: 40, icon: '', img: mainImg, desc: 'بن يمني مطحون طازج ذو جودة عالية وطعم غني.' },
+            { name: 'بن إثيوبي عضوي', price: 38, icon: '', img: mainImg, desc: 'بن إثيوبي عضوي بنكهة فواكهية مميزة.' },
+            { name: 'بن برازيلي مطحون', price: 32, icon: '', img: mainImg, desc: 'بن برازيلي مطحون مثالي للقهوة السوداء.' },
+            { name: 'بن كولومبي ذهبي', price: 36, icon: '', img: mainImg, desc: 'بن كولومبي ذهبي بنكهة متوازنة وحموضة خفيفة.' },
+            { name: 'بن هندي حار', price: 30, icon: '', img: mainImg, desc: 'بن هندي مطحون مع لمسة توابل حارة.' }
+        ];
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        function renderProducts() {
+            const productsDiv = document.getElementById('products');
+            productsDiv.className = 'products-grid';
+            productsDiv.innerHTML = '';
+            products.forEach((p, i) => {
+                productsDiv.innerHTML += `
+                    <div class="product-card" onclick="goToProduct(${i})" style="perspective:700px;">
+                        <div class="product-3d-wrap">
+                            <img src="${p.img}" alt="${p.name}" class="card-img product-3d-img">
+                        </div>
+                        <div class="card-name">${p.name}</div>
+                        <div class="card-price">${p.price} ريال</div>
+                        <div class="card-desc">${p.desc}</div>
+                        <button class="card-btn" onclick="event.stopPropagation();addToCart(${i})">إضافة للعربة</button>
+                    </div>
+                `;
+            });
+        }
+        window.goToProduct = function(idx) {
+            localStorage.setItem('selectedProduct', JSON.stringify(products[idx]));
+            window.location.href = 'product.html';
+        }
+        function showPrivacy(e) {
+            e.preventDefault();
+            document.getElementById('privacy-modal').style.display = 'flex';
+        }
+        function showTerms(e) {
+            e.preventDefault();
+            document.getElementById('terms-modal').style.display = 'flex';
+        }
+        window.closeModal = function(id) {
+            if (id) {
+                document.getElementById(id).style.display = 'none';
+            } else {
+                const modal = document.querySelector('.modal-bg');
+                if(modal) modal.remove();
+            }
+        }
+        function renderCart() {
+            const cartItemsDiv = document.getElementById('cart-items');
+            const totalDiv = document.getElementById('total');
+            cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cartItemsDiv.innerHTML = '';
+            let total = 0;
+            cart.forEach((item, idx) => {
+                cartItemsDiv.innerHTML += `<div class="cart-item"><button class='remove-btn' title='حذف' onclick='removeFromCart(${idx})' style="font-size:18px;color:#1565c0;background:none;border:none;cursor:pointer;margin-left:8px;">🗑️</button> <span>${item.icon} ${item.name}</span><span>${item.price} ريال</span></div>`;
+                total += item.price;
+            });
+
+            // إزالة أي عناصر سابقة لمربع الخصم أو الإجمالي
+            let oldWrapper = document.getElementById('cart-discount-wrapper');
+            if (oldWrapper) oldWrapper.remove();
+
+            // فقط إذا كان هناك منتجات في السلة
+            if (total > 0) {
+                // إنشاء الغلاف
+                const wrapper = document.createElement('div');
+                wrapper.id = 'cart-discount-wrapper';
+                wrapper.style = "display:flex;justify-content:center;align-items:flex-start;gap:24px;margin-top:18px;margin-bottom:8px;flex-wrap:wrap;";
+
+                // مربع الدفع الآن
+                const payBox = document.createElement('div');
+                payBox.style = "background:#f5f5f5;border-radius:10px;padding:18px 28px;min-width:180px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 8px #0001;";
+                payBox.innerHTML = `<div id="cart-total-text" style="font-size:1.2rem;font-weight:bold;"></div>`;
+
+                // مربع كود الخصم
+                const discountDiv = document.createElement('div');
+                discountDiv.id = "discount-div";
+                discountDiv.style = "background:#f5f5f5;border-radius:10px;padding:18px 24px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 8px #0001;";
+                discountDiv.innerHTML = `
+                    <span style="font-weight:bold;margin-bottom:8px;">كود الخصم</span>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <input id="discount-code" type="text" placeholder="ادخل كود الخصم" style="padding:6px 10px;border-radius:6px;border:1px solid #bbb;width:120px;">
+                        <button onclick="applyDiscount()" style="padding:6px 14px;border-radius:6px;background:#1976d2;color:#fff;border:none;cursor:pointer;">تطبيق</button>
+                    </div>
+                    <span id="discount-msg" style="margin-top:6px;color:#1976d2;font-weight:bold;min-height:20px;display:block;"></span>
+                `;
+
+                wrapper.appendChild(payBox);
+                wrapper.appendChild(discountDiv);
+
+                // إدراج الغلاف قبل totalDiv
+                totalDiv.parentNode.insertBefore(wrapper, totalDiv);
+
+                // حساب الخصم وتحديث النصوص
+                let codeInput = discountDiv.querySelector('#discount-code');
+                let discount = 0;
+                let discountText = '';
+                if (codeInput && codeInput.value.trim().toLowerCase() === 'عنبة') {
+                    discount = Math.round(total * 0.10);
+                    discountText = `خصم 10% (${discount} ريال)`;
+                }
+                let finalTotal = total - discount;
+                let cartTotalText = payBox.querySelector('#cart-total-text');
+                if (cartTotalText) {
+                    cartTotalText.textContent = total > 0
+                        ? `الإجمالي: ${finalTotal} ريال (${cart.length} منتج${cart.length === 1 ? '' : 'ات'})${discount > 0 ? ' - ' + discountText : ''}`
+                        : '';
+                }
+                // إخفاء نص الإجمالي الأصلي
+                totalDiv.textContent = '';
+
+                // تحديث رسالة الخصم
+                let msg = discountDiv.querySelector('#discount-msg');
+                if (codeInput) {
+                    codeInput.oninput = function() { applyDiscount(); };
+                    if (discount > 0) {
+                        msg.textContent = 'تم تطبيق الخصم!';
+                        msg.style.color = '#388e3c';
+                    } else if (codeInput.value.trim() !== '') {
+                        msg.textContent = 'كود غير صحيح';
+                        msg.style.color = '#d32f2f';
+                    } else {
+                        msg.textContent = '';
+                    }
+                }
+            } else {
+                // إذا لم يكن هناك منتجات، أظهر نص الإجمالي الأصلي فقط
+                totalDiv.textContent = '';
+            }
+        }
+
+        // دالة تطبيق كود الخصم
+        window.applyDiscount = function() {
+            renderCart();
+        }
+        // عداد العربة
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('cart')||'[]');
+            let el = document.getElementById('cart-count');
+            if(el) el.textContent = cart.length>0 ? cart.length : '';
+        }
+        updateCartCount();
+        // زر الصعود للأعلى
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.onscroll = function() {
+            if(window.scrollY>200) scrollBtn.style.display='block';
+            else scrollBtn.style.display='none';
+        };
+        scrollBtn.onclick = ()=>window.scrollTo({top:0,behavior:'smooth'});
+        window.addToCart = function(idx) {
+            cart.push(products[idx]);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            window.location.href = 'cart.html';
+        }
+        window.removeFromCart = function(idx) {
+            cart.splice(idx, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+            updateCartCount();
+        }
+        renderProducts();
+        // نفذ renderCart فقط إذا كان العنصر cart-items موجود (أي في صفحة cart.html)
+        if(document.getElementById('cart-items')) renderCart();
+    </script>
+    <script>
+        // تمرير تلقائي للقسم المطلوب إذا كان هناك هاش
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.location.hash) {
+                const el = document.getElementById(window.location.hash.replace('#',''));
+                if (el) setTimeout(() => el.scrollIntoView({behavior:'smooth'}), 200);
+            }
+        });
+        // تعطيل زر سلة المشتريات حتى الموافقة على الشروط
+        document.addEventListener('DOMContentLoaded', function() {
+            const termsCheckbox = document.getElementById('accept-terms');
+            const cartLink = document.getElementById('cart-link');
+            function updateCartLink() {
+                // فعّل زر السلة دائماً (حتى بدون الموافقة على الشروط)
+                cartLink.classList.remove('disabled-link');
+                cartLink.removeAttribute('tabindex');
+            }
+            updateCartLink();
+            // إذا أردت إبقاء الشروط فقط للعرض، احذف الكود التالي:
+            // termsCheckbox.addEventListener('change', updateCartLink);
+            // cartLink.addEventListener('click', function(e) {
+            //     if (!termsCheckbox.checked) {
+            //         e.preventDefault();
+            //     }
+            // });
+        });
+    </script>
+    <script>
+        // 3D tilt effect for the promo image
+        const threeDContainer = document.getElementById('threeDContainer');
+        const threeDImage = document.getElementById('threeDImage');
+        if (threeDContainer && threeDImage) {
+            threeDContainer.addEventListener('mousemove', function(e) {
+                const rect = threeDContainer.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateY = ((x - centerX) / centerX) * 15;
+                const rotateX = ((centerY - y) / centerY) * 15;
+                threeDImage.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale(1.04)`;
+            });
+            threeDContainer.addEventListener('mouseleave', function() {
+                threeDImage.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
+            });
+        }
+
+        // 3D "object" effect for all product images
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.product-card').forEach(function(card) {
+                const wrap = card.querySelector('.product-3d-wrap');
+                if (!wrap) return;
+                card.addEventListener('mousemove', function(e) {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    // دوران أكبر لمحاكاة العرض الجانبي/الخلفي
+                    const rotateY = ((x - centerX) / centerX) * 35;
+                    const rotateX = ((centerY - y) / centerY) * 18;
+                    wrap.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale(1.07)`;
+                });
+                card.addEventListener('mouseleave', function() {
+                    wrap.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
+                });
+            });
+        });
+    </script>
+    <script>
+        // تفعيل رابط الشروط والأحكام في القائمة الرئيسية ليفتح صفحة terms.html
+        document.addEventListener('DOMContentLoaded', function() {
+            var termsLink = document.getElementById('terms-link');
+            if (termsLink) {
+                termsLink.addEventListener('click', function(e) {
+                    // لا تمنع السلوك الافتراضي، فقط اترك الرابط يعمل
+                    // window.location.href = 'terms.html'; // هذا السطر غير مطلوب
+                });
+            }
+        });
+        // تمرير سلس عند الضغط على روابط الفوتر (سياسة الخصوصية والشروط)
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.scroll-link').forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    const hash = link.getAttribute('href');
+                    if (hash && hash.startsWith('#')) {
+                        const el = document.getElementById(hash.replace('#',''));
+                        if (el) {
+                            e.preventDefault();
+                            el.scrollIntoView({behavior:'smooth'});
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        // تمرير سلس عند الضغط على روابط الدعم الفني فقط
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.support-link').forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    const el = document.getElementById('support');
+                    if (el) {
+                        e.preventDefault();
+                        el.scrollIntoView({behavior:'smooth'});
+                    }
+                });
+            });
+        });
+
+        // لا حاجة لأي جافاسكريبت لروابط الشروط/الخصوصية لأنها تفتح صفحة جديدة مباشرة
+    </script>
+</body>
+</html>
