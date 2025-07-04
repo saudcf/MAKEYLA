@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>سلة المشتريات - مكيلة</title>
+    <link rel="stylesheet" href="store-style.css">
+    <style>
+        /* تحسين عرض ملخص الدفع */
+        .checkout-summary {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px #0001;
+            padding: 28px 22px 18px 22px;
+            margin-top: 18px;
+            max-width: 420px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        .checkout-summary .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            font-size: 1.07rem;
+        }
+        .checkout-summary .row.total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1976d2;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            margin-top: 18px;
+        }
+        .checkout-summary .discount-row {
+            color: #388e3c;
+        }
+        .checkout-summary .shipping-row {
+            color: #795548;
+        }
+        .checkout-summary .discount-input-row {
+            margin-bottom: 10px;
+        }
+        .checkout-summary .discount-input-row input {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #bbb;
+            width: 120px;
+            margin-left: 8px;
+        }
+        .checkout-summary .discount-input-row button {
+            padding: 6px 14px;
+            border-radius: 6px;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .checkout-summary .discount-msg {
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .checkout-summary .pay-btn {
+            width: 100%;
+            margin-top: 18px;
+            padding: 12px 0;
+            background: linear-gradient(90deg,#1976d2,#64b5f6);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 2px 8px #1976d233;
+        }
+        .checkout-summary .pay-btn:active {
+            background: #1565c0;
+        }
+        .checkout-form {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px #0001;
+            padding: 24px 16px 12px 16px;
+            margin-top: 18px;
+            max-width: 420px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        .checkout-form label { display:block; margin-bottom:6px; font-weight:500; }
+        .checkout-form input, .checkout-form select {
+            width: 100%; margin-bottom: 14px; padding: 8px 10px; border-radius: 7px; border: 1px solid #bbb; font-size:1rem;
+        }
+        .checkout-form .pay-btn {
+            width: 100%; margin-top: 10px; padding: 12px 0;
+            background: linear-gradient(90deg,#1976d2,#64b5f6);
+            color: #fff; border: none; border-radius: 8px;
+            font-size: 1.1rem; font-weight: bold; cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 2px 8px #1976d233;
+        }
+        .checkout-form .pay-btn:active { background: #1565c0; }
+        @media (max-width:600px) {
+            .checkout-form { padding: 12px 2px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="main-nav gradient-header">
+        <div class="nav-logo">مكيلة</div>
+        <ul class="nav-links">
+            <li><a href="jsk.html#products">المنتجات</a></li>
+            <li><a href="cart.html" id="cart-link">سلة المشتريات <span id="cart-count" class="cart-count"></span></a></li>
+            <li><a href="privacy.html">سياسة الخصوصية</a></li>
+            <li><a href="terms.html">الشروط والأحكام</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>سلة المشتريات</h1>
+        <div id="cart-items"></div>
+        <div id="cart-summary"></div>
+        <form class="checkout-form" id="checkout-form" autocomplete="on" onsubmit="return false;">
+            <h2 style="margin-bottom:12px;font-size:1.1rem;">بيانات العميل</h2>
+            <label for="customer-name">الاسم الكامل</label>
+            <input type="text" id="customer-name" required placeholder="مثال: محمد أحمد">
+            <label for="customer-phone">رقم الجوال</label>
+            <input type="tel" id="customer-phone" required pattern="05[0-9]{8}" placeholder="05xxxxxxxx">
+            <label for="customer-city">المدينة</label>
+            <select id="customer-city" required>
+                <option value="">اختر المدينة</option>
+                <option>جازان</option>
+            </select>
+            <label for="customer-address">العنوان التفصيلي</label>
+            <input type="text" id="customer-address" required placeholder="اسم الحي، الشارع، رقم المنزل...">
+            <label for="shipping-company">شركة الشحن</label>
+            <select id="shipping-company" required>
+                <option value="">اختر شركة الشحن</option>
+                <option>سمسا</option>
+                <option>أرامكس</option>
+            </select>
+            <label style="margin-bottom:6px;font-weight:500;">طريقة الدفع</label>
+            <div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+                <label style="display:flex;align-items:center;gap:4px;">
+                    <input type="radio" name="payment-method" value="Apple Pay" required>
+                    <span style="display:inline-flex;align-items:center;">
+                        <!-- SVG Apple Pay -->
+                        <svg width="32" height="20" viewBox="0 0 32 20"><rect width="32" height="20" rx="4" fill="#000"/><text x="16" y="14" text-anchor="middle" fill="#fff" font-size="10" font-family="Arial" font-weight="bold">Apple Pay</text></svg>
+                    </span>
+                </label>
+                <label style="display:flex;align-items:center;gap:4px;">
+                    <input type="radio" name="payment-method" value="Mada">
+                    <span style="display:inline-flex;align-items:center;">
+                        <!-- SVG Mada -->
+                        <svg width="32" height="20" viewBox="0 0 32 20"><rect width="32" height="20" rx="4" fill="#1976d2"/><text x="16" y="14" text-anchor="middle" fill="#fff" font-size="10" font-family="Arial" font-weight="bold">مدى</text></svg>
+                    </span>
+                </label>
+                <label style="display:flex;align-items:center;gap:4px;">
+                    <input type="radio" name="payment-method" value="STC Pay">
+                    <span style="display:inline-flex;align-items:center;">
+                        <!-- SVG STC Pay -->
+                        <svg width="32" height="20" viewBox="0 0 32 20"><rect width="32" height="20" rx="4" fill="#6f2cff"/><text x="16" y="14" text-anchor="middle" fill="#fff" font-size="10" font-family="Arial" font-weight="bold">STC Pay</text></svg>
+                    </span>
+                </label>
+                <label style="display:flex;align-items:center;gap:4px;">
+                    <input type="radio" name="payment-method" value="Bank">
+                    <span style="display:inline-flex;align-items:center;">
+                        <svg width="32" height="20" viewBox="0 0 32 20"><rect width="32" height="20" rx="4" fill="#795548"/><text x="16" y="14" text-anchor="middle" fill="#fff" font-size="10" font-family="Arial" font-weight="bold">تحويل</text></svg>
+                    </span>
+                </label>
+            </div>
+            <div id="payment-actions" style="margin-bottom:10px;"></div>
+            <div id="order-success" style="color:#388e3c;font-weight:bold;margin-top:12px;display:none;">تم استلام طلبك بنجاح! سيتم التواصل معك قريباً.</div>
+        </form>
+        <button onclick="window.location.href='jsk.html'" class="card-btn" style="margin:24px auto 0 auto;display:block;width:180px;">العودة للمتجر</button>
+    </div>
+    <script>
+        // تحديث عداد السلة
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('cart')||'[]');
+            let el = document.getElementById('cart-count');
+            if(el) el.textContent = cart.length>0 ? cart.length : '';
+        }
+        updateCartCount();
+
+        // عرض عناصر السلة
+        function renderCart() {
+            const cartItemsDiv = document.getElementById('cart-items');
+            const summaryDiv = document.getElementById('cart-summary');
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cartItemsDiv.innerHTML = '';
+            let total = 0;
+            cart.forEach((item, idx) => {
+                cartItemsDiv.innerHTML += `<div class="cart-item" style="margin-bottom:10px;">
+                    <button class='remove-btn' title='حذف' onclick='removeFromCart(${idx})' style="font-size:18px;color:#1565c0;background:none;border:none;cursor:pointer;margin-left:8px;">🗑️</button>
+                    <span>${item.icon||''} ${item.name}</span>
+                    <span style="margin-right:12px;">${item.price} ريال</span>
+                </div>`;
+                total += item.price;
+            });
+
+            // ملخص السلة مع الخصم والشحن
+            if (cart.length === 0) {
+                summaryDiv.innerHTML = "<div>سلتك فارغة.</div>";
+                document.getElementById('checkout-form').style.display = 'none';
+                return;
+            } else {
+                document.getElementById('checkout-form').style.display = '';
+            }
+
+            // عناصر ملخص السلة
+            let discountCode = (document.getElementById('discount-code')||{}).value || '';
+            let discount = 0;
+            if (discountCode.trim().toLowerCase() === 'عنبة') {
+                discount = Math.round(total * 0.10);
+            }
+            let shipping = 20;
+            let afterDiscount = total - discount;
+            let finalTotal = afterDiscount + shipping;
+
+            summaryDiv.innerHTML = `
+                <div style="background:#f5f5f5;padding:18px 18px 8px 18px;border-radius:12px;box-shadow:0 2px 8px #0001;">
+                    <div style="margin-bottom:10px;">
+                        <b>المجموع قبل الخصم:</b> <span>${total} ريال</span>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <b>كود الخصم:</b>
+                        <input id="discount-code" type="text" placeholder="ادخل كود الخصم" value="${discountCode}" style="padding:6px 10px;border-radius:6px;border:1px solid #bbb;width:120px;">
+                        <button onclick="applyDiscount()" style="padding:6px 14px;border-radius:6px;background:#1976d2;color:#fff;border:none;cursor:pointer;">تطبيق</button>
+                        <span id="discount-msg" style="margin-right:8px;font-weight:bold;color:${discountCode && discount === 0 ? '#d32f2f' : '#388e3c'};">
+                            ${discountCode ? (discount > 0 ? 'تم تطبيق الخصم!' : 'كود غير صحيح') : ''}
+                        </span>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <b>قيمة الخصم:</b> <span>${discount} ريال</span>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <b>المجموع بعد الخصم:</b> <span>${afterDiscount} ريال</span>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <b>الشحن:</b> <span>${shipping} ريال</span>
+                    </div>
+                    <div style="font-size:1.2rem;font-weight:bold;">
+                        <b>الإجمالي النهائي:</b> <span>${finalTotal} ريال</span>
+                    </div>
+                </div>
+            `;
+            // تفعيل تطبيق الخصم عند الكتابة
+            document.getElementById('discount-code').oninput = applyDiscount;
+        }
+
+        function applyDiscount() {
+            renderCart();
+        }
+
+        function removeFromCart(idx) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart.splice(idx, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+            updateCartCount();
+        }
+
+        renderCart();
+
+        // طرق الدفع واقعية (واجهة فقط) - الدفع هنا وهمي ويمكن استبداله لاحقاً بدفع حقيقي
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentRadios = document.querySelectorAll('input[name="payment-method"]');
+            const paymentActions = document.getElementById('payment-actions');
+            const checkoutForm = document.getElementById('checkout-form');
+
+            function resetActions() {
+                paymentActions.innerHTML = '';
+            }
+
+            function showToast(msg, color = "#1976d2") {
+                let toast = document.createElement('div');
+                toast.textContent = msg;
+                toast.style.cssText = "position:fixed;bottom:32px;right:32px;background:" + color + ";color:#fff;padding:14px 28px;border-radius:8px;font-size:1.1rem;z-index:9999;box-shadow:0 2px 12px #0003;opacity:0.97;";
+                document.body.appendChild(toast);
+                setTimeout(() => { toast.remove(); }, 2500);
+            }
+
+            function validateForm() {
+                const name = document.getElementById('customer-name').value.trim();
+                const phone = document.getElementById('customer-phone').value.trim();
+                const city = document.getElementById('customer-city').value;
+                const address = document.getElementById('customer-address').value.trim();
+                const shipping = document.getElementById('shipping-company').value;
+                if (!name || !/^05\d{8}$/.test(phone) || !city || !address || !shipping) {
+                    showToast("يرجى تعبئة جميع البيانات بشكل صحيح", "#d32f2f");
+                    return false;
+                }
+                return true;
+            }
+
+            // --- الدفع الوهمي: يمكنك استبدال هذه الدوال لاحقاً بدمج بوابة دفع حقيقية ---
+            function fakeApplePay() {
+                showToast("تمت عملية الدفع عبر Apple Pay بنجاح!");
+                fakePaymentSuccess();
+            }
+            function fakeMadaPay() {
+                showToast("تمت عملية الدفع عبر مدى بنجاح!");
+                fakePaymentSuccess();
+            }
+            function fakeStcPay() {
+                showToast("تمت عملية الدفع عبر STC Pay بنجاح!");
+                fakePaymentSuccess();
+            }
+            function fakeBankTransfer() {
+                showToast("تم استلام طلبك، يرجى إرسال إيصال التحويل.");
+                fakePaymentSuccess();
+            }
+            function fakePaymentSuccess() {
+                document.getElementById('order-success').style.display = 'block';
+                setTimeout(function() {
+                    localStorage.removeItem('cart');
+                    window.location.href = "jsk.html";
+                }, 2500);
+            }
+            // --- نهاية الدفع الوهمي ---
+
+            paymentRadios.forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    resetActions();
+                    if (radio.value === "Apple Pay") {
+                        paymentActions.innerHTML = `<button type="button" id="apple-pay-btn" class="pay-btn" style="background:#000;margin-bottom:8px;">الدفع عبر Apple Pay</button>`;
+                        document.getElementById('apple-pay-btn').onclick = function() {
+                            if (validateForm()) fakeApplePay();
+                        };
+                    } else if (radio.value === "Mada") {
+                        paymentActions.innerHTML = `<button type="button" id="mada-btn" class="pay-btn" style="background:#1976d2;margin-bottom:8px;">الدفع عبر مدى</button>`;
+                        document.getElementById('mada-btn').onclick = function() {
+                            if (validateForm()) fakeMadaPay();
+                        };
+                    } else if (radio.value === "STC Pay") {
+                        paymentActions.innerHTML = `<button type="button" id="stcpay-btn" class="pay-btn" style="background:#6f2cff;margin-bottom:8px;">الدفع عبر STC Pay</button>`;
+                        document.getElementById('stcpay-btn').onclick = function() {
+                            if (validateForm()) fakeStcPay();
+                        };
+                    } else if (radio.value === "Bank") {
+                        paymentActions.innerHTML = `
+                            <div style="background:#f5f5f5;padding:10px 8px;border-radius:8px;margin-bottom:8px;">
+                                <b>بيانات التحويل البنكي:</b><br>
+                                اسم البنك: الراجحي<br>
+                                رقم الحساب: 1234567890<br>
+                                الآيبان: SA12300001234567890<br>
+                                بعد التحويل يرجى إرسال الإيصال على واتساب المتجر.
+                            </div>
+                            <button type="button" id="bank-btn" class="pay-btn" style="background:#795548;">تأكيد التحويل البنكي</button>
+                        `;
+                        document.getElementById('bank-btn').onclick = function() {
+                            if (validateForm()) fakeBankTransfer();
+                        };
+                    }
+                });
+            });
+
+            checkoutForm.onsubmit = function(e) {
+                e.preventDefault();
+                showToast("يرجى اختيار طريقة الدفع", "#d32f2f");
+                return false;
+            };
+        });
+    </script>
+</body>
+</html>
+<!-- لا تغيير، فقط تأكد أن الملف موجود في نفس المجلد مع server.js -->
